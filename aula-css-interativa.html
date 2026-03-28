@@ -1,0 +1,587 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aula Interativa de CSS</title>
+  <style>
+    :root {
+      --bg: #f4f7f4;
+      --bg-soft: #e9efe9;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --brand: #0f766e;
+      --brand-2: #155e75;
+      --accent: #b45309;
+      --danger: #b91c1c;
+      --ok: #166534;
+      --border: #d1d5db;
+      --shadow: 0 10px 30px rgba(2, 44, 34, 0.08);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, #dff2ea 0%, transparent 45%),
+        radial-gradient(circle at bottom left, #f8ead6 0%, transparent 40%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    header {
+      padding: 2.4rem 1.2rem 1.8rem;
+      text-align: center;
+      background: linear-gradient(120deg, #e7f5f3, #f8f2e7);
+      border-bottom: 1px solid #d9e3de;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+      letter-spacing: 0.3px;
+    }
+
+    .subtitle {
+      margin: 0.6rem auto 0;
+      max-width: 760px;
+      color: var(--muted);
+    }
+
+    .progress-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: #fdfefd;
+      border-bottom: 1px solid #dbe5df;
+      backdrop-filter: blur(4px);
+    }
+
+    .progress-track {
+      height: 10px;
+      flex: 1;
+      background: var(--bg-soft);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--brand), var(--brand-2));
+      transition: width 0.25s ease;
+    }
+
+    .progress-text {
+      font-weight: 700;
+      color: var(--brand-2);
+      min-width: 130px;
+      text-align: right;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 1.2rem;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      margin: 0 0 1rem;
+    }
+
+    .module-title {
+      margin: 0 0 0.5rem;
+      color: #134e4a;
+    }
+
+    .concepts {
+      margin: 0.6rem 0;
+      padding-left: 1.1rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.7rem;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid #b9d4ce;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      background: #f3faf8;
+      color: #0f5c55;
+    }
+
+    .exercise {
+      margin-top: 0.9rem;
+      padding: 0.85rem;
+      background: #fbfdfb;
+      border: 1px dashed #c9d5cf;
+      border-radius: 10px;
+    }
+
+    details {
+      margin-top: 0.65rem;
+      border: 1px solid #d7e0dc;
+      border-radius: 10px;
+      background: #fbfcfb;
+      padding: 0.45rem 0.75rem;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #0f5c55;
+    }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .quiz {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 0.8rem;
+    }
+
+    .quiz p {
+      margin-top: 0;
+      font-weight: 600;
+    }
+
+    .quiz label {
+      display: block;
+      margin: 0.3rem 0;
+      color: #374151;
+    }
+
+    .code-box {
+      margin-top: 0.55rem;
+      width: 100%;
+      min-height: 92px;
+      border: 1px solid #c8d3ce;
+      border-radius: 10px;
+      padding: 0.7rem;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.94rem;
+      background: #f6faf8;
+      resize: vertical;
+    }
+
+    .inline-code {
+      font-family: Consolas, "Courier New", monospace;
+      background: #eef4f1;
+      border: 1px solid #d6e0dc;
+      border-radius: 8px;
+      padding: 0.08rem 0.35rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-top: 0.6rem;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 0.55rem 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .btn-soft {
+      background: #e7f4f1;
+      color: #0f5c55;
+      border: 1px solid #b8d4ce;
+    }
+
+    .feedback {
+      margin-top: 0.6rem;
+      font-weight: 700;
+    }
+
+    .ok {
+      color: var(--ok);
+    }
+
+    .wrong {
+      color: var(--danger);
+    }
+
+    .final-panel {
+      border: 2px solid #d2e7dd;
+      background: linear-gradient(120deg, #f6fbf8, #fdf8ee);
+    }
+
+    .small {
+      font-size: 0.92rem;
+      color: #4b5563;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem 2rem;
+      color: #4b5563;
+    }
+
+    @media (max-width: 640px) {
+      .progress-text {
+        min-width: 95px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Aula Interativa de CSS</h1>
+    <p class="subtitle">
+      Você já conhece HTML. Agora vamos dominar CSS por prática: teoria enxuta, questões com respostas ocultas e desafios de código que validam automaticamente.
+    </p>
+  </header>
+
+  <section class="progress-wrap" aria-label="Barra de progresso">
+    <div class="progress-track" aria-hidden="true">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText">0 / 8 OK</div>
+  </section>
+
+  <main>
+    <section class="card">
+      <h2 class="module-title">Como funciona esta página</h2>
+      <ul class="concepts">
+        <li>Cada módulo tem explicação + mini exercício.</li>
+        <li>As respostas do quiz ficam ocultas até você decidir revelar.</li>
+        <li>Nos desafios de código, você precisa escrever o CSS certo e clicar em validar.</li>
+      </ul>
+      <div class="chip-row">
+        <span class="chip">Básico</span>
+        <span class="chip">Layout</span>
+        <span class="chip">Flexbox</span>
+        <span class="chip">Grid</span>
+        <span class="chip">Responsivo</span>
+      </div>
+    </section>
+
+    <section class="card" data-track="1">
+      <h2 class="module-title">Módulo 1: Cascata e Especificidade</h2>
+      <p>O navegador escolhe estilos por prioridade: inline > id > classe > elemento, com desempate por ordem no arquivo.</p>
+      <div class="exercise">
+        <p><strong>Teste rápido:</strong> Qual seletor vence entre <span class="inline-code">.titulo</span> e <span class="inline-code">h1</span>?</p>
+        <div class="quiz" data-quiz="q1" data-answer="b">
+          <label><input type="radio" name="q1" value="a" /> `h1` vence sempre</label>
+          <label><input type="radio" name="q1" value="b" /> `.titulo` vence por maior especificidade</label>
+          <label><input type="radio" name="q1" value="c" /> Depende só da cor usada</label>
+          <div class="actions">
+            <button class="btn-primary" type="button" onclick="checkQuiz('q1')">Validar questão</button>
+          </div>
+          <div class="feedback" id="fb-q1"></div>
+          <details>
+            <summary>Mostrar resposta</summary>
+            <p>Resposta: <strong>B</strong>. Classe tem especificidade maior que seletor de elemento.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" data-track="2">
+      <h2 class="module-title">Módulo 2: Box Model</h2>
+      <p>Todo elemento é uma caixa: conteúdo + padding + border + margin.</p>
+      <div class="exercise">
+        <p>Escreva uma regra para um card com espaçamento interno de <span class="inline-code">16px</span> e borda cinza <span class="inline-code">1px solid #ccc</span>.</p>
+        <textarea id="code1" class="code-box" placeholder="Exemplo: .card { ... }"></textarea>
+        <div class="actions">
+          <button class="btn-primary" type="button" onclick="checkCode('code1', ['padding:16px','border:1pxsolid#ccc'], 'fb-code1')">Validar código</button>
+          <button class="btn-soft" type="button" onclick="fillHint('code1', '.card {\n  padding: 16px;\n  border: 1px solid #ccc;\n}')">Ver dica</button>
+        </div>
+        <div class="feedback" id="fb-code1"></div>
+        <details>
+          <summary>Mostrar resposta</summary>
+          <pre><code>.card {
+  padding: 16px;
+  border: 1px solid #ccc;
+}</code></pre>
+        </details>
+      </div>
+    </section>
+
+    <section class="card" data-track="3">
+      <h2 class="module-title">Módulo 3: Flexbox</h2>
+      <p>Flexbox resolve alinhamento e distribuição de espaço em uma dimensão (linha ou coluna).</p>
+      <div class="exercise quiz-grid">
+        <div class="quiz" data-quiz="q2" data-answer="c">
+          <p>Para centralizar horizontalmente itens em um container flex em linha, usamos:</p>
+          <label><input type="radio" name="q2" value="a" /> `align-items: center`</label>
+          <label><input type="radio" name="q2" value="b" /> `text-align: center`</label>
+          <label><input type="radio" name="q2" value="c" /> `justify-content: center`</label>
+          <div class="actions">
+            <button class="btn-primary" type="button" onclick="checkQuiz('q2')">Validar questão</button>
+          </div>
+          <div class="feedback" id="fb-q2"></div>
+          <details>
+            <summary>Mostrar resposta</summary>
+            <p>Resposta: <strong>C</strong>.</p>
+          </details>
+        </div>
+
+        <div class="quiz">
+          <p>Desafio de código: deixe os cards quebrando linha automaticamente.</p>
+          <textarea id="code2" class="code-box" placeholder=".cards { display: flex; ... }"></textarea>
+          <div class="actions">
+            <button class="btn-primary" type="button" onclick="checkCode('code2', ['display:flex','flex-wrap:wrap'], 'fb-code2')">Validar código</button>
+            <button class="btn-soft" type="button" onclick="fillHint('code2', '.cards {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 12px;\n}')">Ver dica</button>
+          </div>
+          <div class="feedback" id="fb-code2"></div>
+          <details>
+            <summary>Mostrar resposta</summary>
+            <pre><code>.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}</code></pre>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" data-track="4">
+      <h2 class="module-title">Módulo 4: Grid</h2>
+      <p>Grid organiza layout em duas dimensões (linhas e colunas).</p>
+      <div class="exercise">
+        <p>Digite um CSS para criar 3 colunas iguais com espaçamento de 16px.</p>
+        <textarea id="code3" class="code-box" placeholder=".grid { display: grid; ... }"></textarea>
+        <div class="actions">
+          <button class="btn-primary" type="button" onclick="checkCode('code3', ['display:grid','grid-template-columns:repeat(3,1fr)','gap:16px'], 'fb-code3')">Validar código</button>
+        </div>
+        <div class="feedback" id="fb-code3"></div>
+        <details>
+          <summary>Mostrar resposta</summary>
+          <pre><code>.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}</code></pre>
+        </details>
+      </div>
+    </section>
+
+    <section class="card" data-track="5">
+      <h2 class="module-title">Módulo 5: Responsividade</h2>
+      <p>Comece no mobile e use media query para crescer no tablet/desktop.</p>
+      <div class="exercise">
+        <p>Qual media query abaixo ativa estilos para telas até 768px?</p>
+        <div class="quiz" data-quiz="q3" data-answer="a">
+          <label><input type="radio" name="q3" value="a" /> `@media (max-width: 768px) { ... }`</label>
+          <label><input type="radio" name="q3" value="b" /> `@media (min-width: 768px) { ... }`</label>
+          <label><input type="radio" name="q3" value="c" /> `@media (screen: 768px) { ... }`</label>
+          <div class="actions">
+            <button class="btn-primary" type="button" onclick="checkQuiz('q3')">Validar questão</button>
+          </div>
+          <div class="feedback" id="fb-q3"></div>
+          <details>
+            <summary>Mostrar resposta</summary>
+            <p>Resposta: <strong>A</strong>.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" data-track="6">
+      <h2 class="module-title">Módulo 6: Variáveis e Componentes</h2>
+      <p>Use variáveis em <span class="inline-code">:root</span> para manter consistência visual e facilitar manutenção.</p>
+      <div class="exercise">
+        <p>Crie uma variável chamada <span class="inline-code">--primary</span> com valor <span class="inline-code">#0f766e</span> e use em um botão (<span class="inline-code">background: var(--primary)</span>).</p>
+        <textarea id="code4" class="code-box" placeholder=":root { --primary: #0f766e; } .btn { background: var(--primary); }"></textarea>
+        <div class="actions">
+          <button class="btn-primary" type="button" onclick="checkCode('code4', ['--primary:#0f766e','background:var(--primary)'], 'fb-code4')">Validar código</button>
+        </div>
+        <div class="feedback" id="fb-code4"></div>
+      </div>
+    </section>
+
+    <section class="card" data-track="7">
+      <h2 class="module-title">Módulo 7: Frameworks (Bootstrap e Tailwind)</h2>
+      <p>Framework acelera entrega, mas não substitui base de CSS.</p>
+      <div class="exercise quiz-grid">
+        <div class="quiz" data-quiz="q4" data-answer="b">
+          <p>Quando faz mais sentido usar framework?</p>
+          <label><input type="radio" name="q4" value="a" /> Quando quero evitar aprender CSS</label>
+          <label><input type="radio" name="q4" value="b" /> Quando preciso padronizar UI e acelerar entrega</label>
+          <label><input type="radio" name="q4" value="c" /> Sempre, sem avaliar contexto</label>
+          <div class="actions">
+            <button class="btn-primary" type="button" onclick="checkQuiz('q4')">Validar questão</button>
+          </div>
+          <div class="feedback" id="fb-q4"></div>
+          <details>
+            <summary>Mostrar resposta</summary>
+            <p>Resposta: <strong>B</strong>.</p>
+          </details>
+        </div>
+
+        <div class="quiz">
+          <p class="small">Regra prática:</p>
+          <ul class="concepts">
+            <li>Projeto pequeno e customizado: CSS puro + componentes próprios.</li>
+            <li>Projeto com prazo curto e equipe grande: framework pode ser vantajoso.</li>
+            <li>Projeto longo: avalie custo de sobrescrita e manutenção.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card final-panel" data-track="8">
+      <h2 class="module-title">Desafio Final</h2>
+      <p>Escreva uma regra CSS para um botão reutilizável:</p>
+      <ul class="concepts">
+        <li><span class="inline-code">padding: 12px 16px</span></li>
+        <li><span class="inline-code">border-radius: 8px</span></li>
+        <li><span class="inline-code">background: #0f766e</span></li>
+        <li><span class="inline-code">color: #fff</span></li>
+      </ul>
+      <textarea id="code5" class="code-box" placeholder=".btn { ... }"></textarea>
+      <div class="actions">
+        <button class="btn-primary" type="button" onclick="checkCode('code5', ['padding:12px16px','border-radius:8px','background:#0f766e','color:#fff'], 'fb-code5')">Validar desafio final</button>
+        <button class="btn-soft" type="button" onclick="resetProgress()">Resetar progresso</button>
+      </div>
+      <div class="feedback" id="fb-code5"></div>
+      <p id="finalMessage" class="feedback"></p>
+    </section>
+  </main>
+
+  <footer>
+    Continue praticando: a cada módulo, aplique o que aprendeu em um mini projeto próprio.
+  </footer>
+
+  <script>
+    const totalChecks = 8;
+    const doneSet = new Set(JSON.parse(localStorage.getItem("cssLessonDone") || "[]"));
+
+    function normalizeCss(input) {
+      return input
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/[;]+/g, ";")
+        .replace(/;+}/g, "}")
+        .trim();
+    }
+
+    function markDone(id) {
+      doneSet.add(id);
+      localStorage.setItem("cssLessonDone", JSON.stringify(Array.from(doneSet)));
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = doneSet.size;
+      const pct = Math.round((count / totalChecks) * 100);
+      document.getElementById("progressBar").style.width = pct + "%";
+      document.getElementById("progressText").textContent = `${count} / ${totalChecks} OK`;
+
+      const finalMessage = document.getElementById("finalMessage");
+      if (count === totalChecks) {
+        finalMessage.textContent = "Parabéns. Você concluiu os desafios e está pronto para começar projetos reais em CSS.";
+        finalMessage.className = "feedback ok";
+      } else {
+        finalMessage.textContent = "";
+      }
+    }
+
+    function checkQuiz(name) {
+      const container = document.querySelector(`[data-quiz=\"${name}\"]`);
+      const expected = container.getAttribute("data-answer");
+      const chosen = document.querySelector(`input[name=\"${name}\"]:checked`);
+      const feedback = document.getElementById(`fb-${name}`);
+
+      if (!chosen) {
+        feedback.textContent = "Selecione uma alternativa antes de validar.";
+        feedback.className = "feedback wrong";
+        return;
+      }
+
+      if (chosen.value === expected) {
+        feedback.textContent = "OK. Resposta correta.";
+        feedback.className = "feedback ok";
+        markDone(name);
+      } else {
+        feedback.textContent = "Ainda não. Revise o conceito e tente novamente.";
+        feedback.className = "feedback wrong";
+      }
+    }
+
+    function checkCode(textareaId, requiredTokens, feedbackId) {
+      const raw = document.getElementById(textareaId).value;
+      const cleaned = normalizeCss(raw);
+      const feedback = document.getElementById(feedbackId);
+      const missing = requiredTokens.filter(token => !cleaned.includes(token));
+
+      if (missing.length === 0) {
+        feedback.textContent = "OK. Código válido para este desafio.";
+        feedback.className = "feedback ok";
+        markDone(textareaId);
+      } else {
+        feedback.textContent = "Faltou: " + missing.join(" | ");
+        feedback.className = "feedback wrong";
+      }
+    }
+
+    function fillHint(id, text) {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.value = text;
+      }
+      el.focus();
+    }
+
+    function resetProgress() {
+      doneSet.clear();
+      localStorage.removeItem("cssLessonDone");
+      updateProgress();
+      document.querySelectorAll(".feedback").forEach(el => {
+        if (el.id !== "finalMessage") {
+          el.textContent = "";
+          el.className = "feedback";
+        }
+      });
+    }
+
+    updateProgress();
+  </script>
+</body>
+</html>

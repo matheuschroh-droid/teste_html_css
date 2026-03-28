@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)file:///C:/Users/Pichau/Desktop/LAURA/DRHTML/aula-css-interativa.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprenda CSS — Do Zero ao Avançado</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --roxo:   #7c3aed;
+      --roxo2:  #a78bfa;
+      --azul:   #2563eb;
+      --verde:  #16a34a;
+      --laranja:#ea580c;
+      --rosa:   #db2777;
+      --cinza:  #1e1e2e;
+      --cinza2: #2a2a40;
+      --cinza3: #3b3b55;
+      --texto:  #e2e8f0;
+      --code:   #0f172a;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--cinza);
+      color: var(--texto);
+      line-height: 1.7;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: linear-gradient(135deg, var(--roxo), var(--azul));
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+    header h1 { font-size: 2.8rem; margin-bottom: 10px; }
+    header p  { font-size: 1.15rem; opacity: .85; max-width: 600px; margin: auto; }
+
+    /* ===== PROGRESSO ===== */
+    #barra-progresso {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: var(--cinza2);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 2px solid var(--roxo);
+    }
+    #barra-progresso span { font-size: .85rem; white-space: nowrap; }
+    .trilho {
+      flex: 1;
+      height: 8px;
+      background: var(--cinza3);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .trilho-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--roxo2), var(--azul));
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+    #pct { font-weight: 700; color: var(--roxo2); }
+
+    /* ===== LAYOUT ===== */
+    .container { max-width: 900px; margin: auto; padding: 40px 20px; }
+
+    /* ===== MÓDULOS ===== */
+    .modulo {
+      background: var(--cinza2);
+      border-radius: var(--radius);
+      margin-bottom: 36px;
+      overflow: hidden;
+      border: 1px solid var(--cinza3);
+    }
+    .modulo-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 24px;
+      cursor: pointer;
+      user-select: none;
+      transition: background .2s;
+    }
+    .modulo-header:hover { background: var(--cinza3); }
+    .modulo-header .icone {
+      font-size: 1.6rem;
+      min-width: 36px;
+      text-align: center;
+    }
+    .modulo-header h2 { font-size: 1.25rem; flex: 1; }
+    .modulo-header .seta {
+      font-size: 1.2rem;
+      transition: transform .3s;
+    }
+    .modulo-header.aberto .seta { transform: rotate(180deg); }
+    .modulo-corpo {
+      display: none;
+      padding: 0 24px 28px;
+    }
+    .modulo-corpo.visivel { display: block; }
+
+    /* ===== BADGE MÓDULO ===== */
+    .badge-modulo {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 99px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .badge-basico    { background:#16a34a22; color:#4ade80; border:1px solid #16a34a55; }
+    .badge-medio     { background:#ca8a0422; color:#fbbf24; border:1px solid #ca8a0455; }
+    .badge-avancado  { background:#7c3aed22; color:#c4b5fd; border:1px solid #7c3aed55; }
+
+    /* ===== TEORIA ===== */
+    .teoria { margin-top: 16px; }
+    .teoria h3 { font-size: 1rem; color: var(--roxo2); margin: 20px 0 6px; }
+    .teoria p  { margin-bottom: 10px; opacity: .9; }
+    .teoria ul { padding-left: 22px; margin-bottom: 10px; }
+    .teoria ul li { margin-bottom: 4px; }
+
+    /* ===== CODE BLOCK ===== */
+    .code-block {
+      background: var(--code);
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-family: 'Cascadia Code','Consolas','Fira Mono',monospace;
+      font-size: .88rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      border: 1px solid #334;
+      margin: 14px 0;
+      white-space: pre;
+    }
+    .c-prop  { color: #79c0ff; } /* propriedade */
+    .c-val   { color: #a5d6ff; } /* valor */
+    .c-sel   { color: #ff9f70; } /* seletor */
+    .c-com   { color: #8b949e; font-style: italic; } /* comentário */
+    .c-str   { color: #a8ff78; } /* string/texto */
+    .c-num   { color: #f2cc60; } /* número */
+    .c-kw    { color: #ff79c6; } /* keyword */
+    .c-unit  { color: #bd93f9; } /* unidade */
+
+    /* ===== PLAYGROUND ===== */
+    .playground {
+      margin-top: 22px;
+      border: 1px solid var(--cinza3);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .playground-header {
+      background: var(--cinza3);
+      padding: 10px 16px;
+      font-size: .85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .playground-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media(max-width:640px){ .playground-body { grid-template-columns: 1fr; } }
+    .editor-css {
+      background: #0d1117;
+      padding: 14px;
+      font-family: 'Cascadia Code','Consolas',monospace;
+      font-size: .85rem;
+      color: #c9d1d9;
+      border: none;
+      outline: none;
+      resize: vertical;
+      min-height: 160px;
+      width: 100%;
+      line-height: 1.6;
+      border-right: 1px solid var(--cinza3);
+    }
+    .preview-area {
+      background: #fff;
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: auto;
+    }
+    .btn-aplicar {
+      background: var(--roxo);
+      color: #fff;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 600;
+      transition: background .2s;
+    }
+    .btn-aplicar:hover { background: #6429d4; }
+
+    /* ===== QUIZ ===== */
+    .quiz {
+      margin-top: 24px;
+      background: #0f172a;
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--cinza3);
+    }
+    .quiz h3 {
+      color: var(--roxo2);
+      margin-bottom: 14px;
+      font-size: 1rem;
+    }
+    .quiz-pergunta { margin-bottom: 16px; }
+    .quiz-pergunta p { margin-bottom: 10px; font-weight: 500; }
+    .opcoes { display: flex; flex-direction: column; gap: 8px; }
+    .opcao {
+      background: var(--cinza2);
+      border: 1px solid var(--cinza3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all .2s;
+      font-size: .92rem;
+    }
+    .opcao:hover { border-color: var(--roxo2); background: #2d2d4a; }
+    .opcao.certa  { background:#16a34a33; border-color:#4ade80; color:#4ade80; }
+    .opcao.errada { background:#dc262633; border-color:#f87171; color:#f87171; }
+    .feedback-quiz {
+      margin-top: 10px;
+      font-size: .88rem;
+      font-weight: 600;
+      min-height: 20px;
+    }
+
+    /* ===== CHECKLIST ===== */
+    .checklist {
+      margin-top: 20px;
+      border-top: 1px solid var(--cinza3);
+      padding-top: 18px;
+    }
+    .checklist h4 { font-size: .9rem; color: var(--roxo2); margin-bottom: 10px; }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-size: .9rem;
+    }
+    .check-item input[type="checkbox"] { accent-color: var(--roxo2); width: 17px; height: 17px; cursor: pointer; }
+    .check-item.marcado label { text-decoration: line-through; opacity: .55; }
+    .check-item label { cursor: pointer; }
+
+    /* ===== VISUALIZADOR BOX MODEL ===== */
+    .box-model-demo {
+      margin: 20px auto;
+      max-width: 420px;
+      text-align: center;
+      font-size: .8rem;
+      font-weight: 700;
+    }
+    .bm-margin  { background:#f6ad5533; border:2px dashed #f6ad55; border-radius:8px; padding:24px; }
+    .bm-border  { background:#63b3ed33; border:8px solid #63b3ed;  border-radius:4px; padding:20px; }
+    .bm-padding { background:#68d39133; padding:20px; }
+    .bm-content { background:#fc8181;   padding:16px; border-radius:4px; color:#1a202c; }
+    .bm-label-m  { color:#f6ad55; margin-bottom:4px; }
+    .bm-label-b  { color:#63b3ed; margin-bottom:4px; }
+    .bm-label-p  { color:#68d391; margin-bottom:4px; }
+
+    /* ===== FLEXBOX/GRID DEMOS ===== */
+    .flex-demo {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: #1a1a2e;
+      padding: 14px;
+      border-radius: 8px;
+      margin: 14px 0;
+    }
+    .flex-item {
+      background: var(--roxo);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: .88rem;
+    }
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      background: #1a1a2e;
+      padding: 14px;
+      border-radius: 8px;
+      margin: 14px 0;
+    }
+    .grid-item {
+      background: var(--azul);
+      color: #fff;
+      padding: 14px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 700;
+      font-size: .85rem;
+    }
+
+    /* ===== MAPA DE ESTUDOS ===== */
+    #mapa {
+      background: var(--cinza2);
+      border-radius: var(--radius);
+      padding: 30px 24px;
+      margin-bottom: 40px;
+      border: 1px solid var(--cinza3);
+    }
+    #mapa h2 { margin-bottom: 20px; font-size: 1.3rem; }
+    .mapa-linha {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .mapa-etapa {
+      background: var(--cinza3);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: .85rem;
+      font-weight: 600;
+      position: relative;
+    }
+    .mapa-etapa.ativa { background: var(--roxo); color: #fff; }
+    .mapa-seta { padding: 0 8px; opacity: .5; }
+
+    /* ===== DICA ===== */
+    .dica {
+      display: flex;
+      gap: 12px;
+      background: #1d2b3a;
+      border-left: 4px solid var(--azul);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: .9rem;
+    }
+    .dica .dica-icon { font-size: 1.3rem; }
+
+    /* ===== RODAPÉ ===== */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: .85rem;
+      opacity: .5;
+      border-top: 1px solid var(--cinza3);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎨 Aprenda CSS</h1>
+  <p>Do básico ao avançado — com teoria, exemplos visuais, playgrounds e quizzes interativos.</p>
+</header>
+
+<!-- BARRA DE PROGRESSO -->
+<div id="barra-progresso">
+  <span>Progresso:</span>
+  <div class="trilho"><div class="trilho-inner" id="progresso-inner" style="width: 97%;"></div></div>
+  <span><span id="pct">97</span>%</span>
+</div>
+
+<div class="container">
+
+  <!-- MAPA DE ESTUDOS -->
+  <div id="mapa">
+    <h2>🗺️ Seu Plano de Estudos</h2>
+    <div class="mapa-linha">
+      <div class="mapa-etapa ativa">1. O que é CSS?</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">2. Seletores</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">3. Box Model</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">4. Tipografia</div>
+    </div>
+    <div class="mapa-linha">
+      <div class="mapa-etapa">5. Cores &amp; Fundos</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">6. Flexbox</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">7. Grid</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">8. Responsivo</div>
+    </div>
+    <div class="mapa-linha">
+      <div class="mapa-etapa">9. Animações</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">10. Variáveis CSS</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">11. Frameworks</div>
+      <div class="mapa-seta">→</div>
+      <div class="mapa-etapa">🏆 Fim!</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 1 — O QUE É CSS?
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod1">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod1&#39;)">
+      <div class="icone">🧠</div>
+      <div>
+        <h2>Módulo 1 — O que é CSS e como ele funciona?</h2>
+        <span class="badge-modulo badge-basico">Básico</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <h3>O que é CSS?</h3>
+        <p><strong>CSS</strong> (Cascading Style Sheets) é a linguagem que diz <em>como</em> seu HTML vai aparecer na tela. Enquanto o HTML é o esqueleto, o CSS é a roupa, a maquiagem e a decoração.</p>
+
+        <h3>As 3 formas de usar CSS</h3>
+        <p><strong>1. Inline</strong> — diretamente no elemento HTML (evite, exceto em casos pontuais):</p>
+        <div class="code-block"><span class="c-str">&lt;p</span> <span class="c-prop">style</span>=<span class="c-val">"color: red; font-size: 20px;"</span><span class="c-str">&gt;</span>Texto vermelho<span class="c-str">&lt;/p&gt;</span></div>
+
+        <p><strong>2. Internal</strong> — dentro de uma tag <code>&lt;style&gt;</code> no <code>&lt;head&gt;</code>:</p>
+        <div class="code-block"><span class="c-str">&lt;style&gt;</span>
+  <span class="c-sel">p</span> { <span class="c-prop">color</span>: <span class="c-val">red</span>; }
+<span class="c-str">&lt;/style&gt;</span></div>
+
+        <p><strong>3. External</strong> — arquivo <code>.css</code> separado, linkado no HTML (o jeito certo!):</p>
+        <div class="code-block"><span class="c-str">&lt;link</span> <span class="c-prop">rel</span>=<span class="c-val">"stylesheet"</span> <span class="c-prop">href</span>=<span class="c-val">"estilo.css"</span><span class="c-str">&gt;</span></div>
+
+        <h3>Anatomia de uma regra CSS</h3>
+        <div class="code-block"><span class="c-sel">seletor</span> {
+  <span class="c-prop">propriedade</span>: <span class="c-val">valor</span>;
+  <span class="c-prop">outra-propriedade</span>: <span class="c-val">outro-valor</span>;
+}
+
+<span class="c-com">/* Exemplo real: */</span>
+<span class="c-sel">h1</span> {
+  <span class="c-prop">color</span>: <span class="c-val">royalblue</span>;
+  <span class="c-prop">font-size</span>: <span class="c-num">32</span><span class="c-unit">px</span>;
+  <span class="c-prop">text-align</span>: <span class="c-val">center</span>;
+}</div>
+
+        <div class="dica">
+          <div class="dica-icon">💡</div>
+          <div>O <strong>C</strong> de "Cascading" significa <em>cascata</em>: quando dois estilos conflitam, o CSS tem regras para decidir qual vence (especificidade + ordem).</div>
+        </div>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado" id="ck-1-1"><input type="checkbox" id="c11" onchange="atualizarProgresso()"><label for="c11">O CSS define a aparência do HTML</label></div>
+        <div class="check-item marcado" id="ck-1-2"><input type="checkbox" id="c12" onchange="atualizarProgresso()"><label for="c12">Entendi as 3 formas de usar CSS</label></div>
+        <div class="check-item marcado" id="ck-1-3"><input type="checkbox" id="c13" onchange="atualizarProgresso()"><label for="c13">Conheço a anatomia de uma regra CSS</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 2 — SELETORES
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod2">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod2&#39;)">
+      <div class="icone">🎯</div>
+      <div>
+        <h2>Módulo 2 — Seletores: como apontar para elementos</h2>
+        <span class="badge-modulo badge-basico">Básico</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <h3>Tipos de seletores</h3>
+        <div class="code-block"><span class="c-com">/* 1. Elemento — pega TODAS as tags desse tipo */</span>
+<span class="c-sel">p</span>    { <span class="c-prop">color</span>: <span class="c-val">blue</span>; }
+<span class="c-sel">h1</span>   { <span class="c-prop">font-size</span>: <span class="c-num">2</span><span class="c-unit">rem</span>; }
+
+<span class="c-com">/* 2. Classe — pont para class="nome" no HTML */</span>
+<span class="c-sel">.destaque</span>   { <span class="c-prop">background</span>: <span class="c-val">yellow</span>; }
+<span class="c-sel">.btn-primario</span>{ <span class="c-prop">background</span>: <span class="c-val">blue</span>; <span class="c-prop">color</span>: <span class="c-val">white</span>; }
+
+<span class="c-com">/* 3. ID — aponta para id="nome" (único na página) */</span>
+<span class="c-sel">#cabecalho</span>  { <span class="c-prop">background</span>: <span class="c-val">black</span>; }
+
+<span class="c-com">/* 4. Universal — todos os elementos */</span>
+<span class="c-sel">*</span>            { <span class="c-prop">margin</span>: <span class="c-num">0</span>; <span class="c-prop">padding</span>: <span class="c-num">0</span>; }
+
+<span class="c-com">/* 5. Combinadores */</span>
+<span class="c-sel">div p</span>        { <span class="c-prop">color</span>: <span class="c-val">red</span>; }   <span class="c-com">/* todo &lt;p&gt; DENTRO de div */</span>
+<span class="c-sel">div &gt; p</span>      { <span class="c-prop">color</span>: <span class="c-val">red</span>; }   <span class="c-com">/* filho DIRETO */</span>
+<span class="c-sel">h1 + p</span>       { <span class="c-prop">color</span>: <span class="c-val">red</span>; }   <span class="c-com">/* irmão imediato */</span>
+
+<span class="c-com">/* 6. Pseudo-classes — estado do elemento */</span>
+<span class="c-sel">a:hover</span>      { <span class="c-prop">color</span>: <span class="c-val">orange</span>; }  <span class="c-com">/* mouse por cima */</span>
+<span class="c-sel">input:focus</span>  { <span class="c-prop">border</span>: <span class="c-val">2px solid blue</span>; }
+<span class="c-sel">li:first-child</span>{ <span class="c-prop">font-weight</span>: <span class="c-val">bold</span>; }
+
+<span class="c-com">/* 7. Pseudo-elementos — parte do elemento */</span>
+<span class="c-sel">p::first-line</span>{ <span class="c-prop">font-weight</span>: <span class="c-val">bold</span>; }
+<span class="c-sel">h2::before</span>   { <span class="c-prop">content</span>: <span class="c-val">"🔷 "</span>; }</div>
+
+        <h3>Especificidade</h3>
+        <p>Quando dois seletores entram em conflito, quem tem maior <strong>especificidade</strong> vence:</p>
+        <div class="code-block"><span class="c-com">/* Força crescente: */</span>
+<span class="c-sel">*</span>              <span class="c-com">→  0</span>   <span class="c-com">/* universal */</span>
+<span class="c-sel">elemento</span>       <span class="c-com">→  1</span>   <span class="c-com">/* ex: p, h1, div */</span>
+<span class="c-sel">.classe</span>        <span class="c-com">→  10</span>  <span class="c-com">/* ex: .btn */</span>
+<span class="c-sel">#id</span>            <span class="c-com">→  100</span> <span class="c-com">/* ex: #header */</span>
+<span class="c-kw">style=""</span>        <span class="c-com">→  1000</span><span class="c-com">/* inline */</span>
+<span class="c-kw">!important</span>     <span class="c-com">→  ∞</span>   <span class="c-com">/* EVITE usar! */</span></div>
+      </div>
+
+      <!-- PLAYGROUND 1 -->
+      <div class="playground">
+        <div class="playground-header">
+          <span>🧪 Playground — edite o CSS e clique em Aplicar</span>
+          <button class="btn-aplicar" onclick="aplicarPlayground(&#39;pg1&#39;)">▶ Aplicar</button>
+        </div>
+        <div class="playground-body">
+          <textarea class="editor-css" id="pg1-css">/* Tente modificar! */
+.caixa {
+  background: royalblue;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.caixa:hover {
+  background: orange;
+  cursor: pointer;
+}</textarea>
+          <div class="preview-area" id="pg1-preview">
+            <div class="caixa" id="pg1-elem">Passe o mouse aqui!</div>
+          </div>
+        </div>
+      </div>
+      <style id="pg1-style">/* Tente modificar! */
+.caixa {
+  background: royalblue;
+  color: white;
+  padding: 100px auto 1px auto;
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.caixa:hover {
+  background: green;
+  cursor: pointer;
+}</style>
+
+      <!-- QUIZ 1 -->
+      <div class="quiz">
+        <h3>🧩 Quiz — Seletores</h3>
+        <div class="quiz-pergunta">
+          <p>Qual seletor aponta para um elemento com <code>class="titulo"</code>?</p>
+          <div class="opcoes" id="q1">
+            <div class="opcao" onclick="responder(&#39;q1&#39;,this,false)">  #titulo  </div>
+            <div class="opcao certa" onclick="responder(&#39;q1&#39;,this,true)">   .titulo  </div>
+            <div class="opcao" onclick="responder(&#39;q1&#39;,this,false)">  titulo   </div>
+            <div class="opcao" onclick="responder(&#39;q1&#39;,this,false)">  *titulo  </div>
+          </div>
+          <div class="feedback-quiz" id="fb-q1" style="color: rgb(74, 222, 128);">✅ Correto! Muito bem!</div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c21" onchange="atualizarProgresso()"><label for="c21">Sei usar seletor de elemento, classe e ID</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c22" onchange="atualizarProgresso()"><label for="c22">Entendo pseudo-classes como :hover e :focus</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c23" onchange="atualizarProgresso()"><label for="c23">Entendo o conceito de especificidade</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 3 — BOX MODEL
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod3">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod3&#39;)">
+      <div class="icone">📦</div>
+      <div>
+        <h2>Módulo 3 — Box Model: a caixa de todo elemento</h2>
+        <span class="badge-modulo badge-basico">Básico</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <p>Todo elemento HTML é tratado como uma <strong>caixa retangular</strong> com 4 camadas:</p>
+
+        <!-- DIAGRAMA BOX MODEL -->
+        <div class="box-model-demo">
+          <div class="bm-margin">
+            <div class="bm-label-m">margin (espaço externo)</div>
+            <div class="bm-border">
+              <div class="bm-label-b">border (borda)</div>
+              <div class="bm-padding">
+                <div class="bm-label-p">padding (espaço interno)</div>
+                <div class="bm-content">conteúdo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block"><span class="c-sel">.caixa</span> {
+  <span class="c-com">/* CONTEÚDO */</span>
+  <span class="c-prop">width</span>: <span class="c-num">200</span><span class="c-unit">px</span>;
+  <span class="c-prop">height</span>: <span class="c-num">100</span><span class="c-unit">px</span>;
+
+  <span class="c-com">/* PADDING — espaço INTERNO (entre conteúdo e borda) */</span>
+  <span class="c-prop">padding</span>: <span class="c-num">20</span><span class="c-unit">px</span>;            <span class="c-com">/* todos os lados */</span>
+  <span class="c-prop">padding</span>: <span class="c-num">10</span><span class="c-unit">px</span> <span class="c-num">20</span><span class="c-unit">px</span>;      <span class="c-com">/* cima/baixo | esq/dir */</span>
+
+  <span class="c-com">/* BORDER — a borda visível */</span>
+  <span class="c-prop">border</span>: <span class="c-num">2</span><span class="c-unit">px</span> <span class="c-val">solid</span> <span class="c-val">#333</span>;    <span class="c-com">/* espessura | estilo | cor */</span>
+  <span class="c-prop">border-radius</span>: <span class="c-num">8</span><span class="c-unit">px</span>;         <span class="c-com">/* cantos arredondados */</span>
+
+  <span class="c-com">/* MARGIN — espaço EXTERNO (empurra outros elementos) */</span>
+  <span class="c-prop">margin</span>: <span class="c-num">16</span><span class="c-unit">px</span>;
+  <span class="c-prop">margin</span>: <span class="c-num">0</span> <span class="c-val">auto</span>;             <span class="c-com">/* centraliza horizontalmente! */</span>
+
+  <span class="c-com">/* BOX-SIZING (use sempre!) */</span>
+  <span class="c-prop">box-sizing</span>: <span class="c-val">border-box</span>;     <span class="c-com">/* padding/border ficam DENTRO do width */</span>
+}</div>
+
+        <div class="dica">
+          <div class="dica-icon">⚠️</div>
+          <div>Por padrão, <code>width: 200px</code> só conta o conteúdo. Com <code>box-sizing: border-box</code>, padding e border ficam <em>dentro</em> dos 200px — muito mais previsível!</div>
+        </div>
+      </div>
+
+      <!-- PLAYGROUND 2 -->
+      <div class="playground">
+        <div class="playground-header">
+          <span>🧪 Playground — Mexa no Box Model</span>
+          <button class="btn-aplicar" onclick="aplicarPlayground(&#39;pg2&#39;)">▶ Aplicar</button>
+        </div>
+        <div class="playground-body">
+          <textarea class="editor-css" id="pg2-css">.box {
+  width: 150px;
+  height: 80px;
+  background: steelblue;
+  color: white;
+  padding: 10px;
+  margin: 20px auto;
+  border: 3px solid navy;
+  border-radius: 6px;
+  text-align: center;
+  box-sizing: border-box;
+}</textarea>
+          <div class="preview-area" id="pg2-preview">
+            <div class="box" id="pg2-elem">Caixa!</div>
+          </div>
+        </div>
+      </div>
+      <style id="pg2-style">.box {
+  width: 150px;
+  height: 80px;
+  background-color: #00ffff;
+  color: white;
+  padding: 10px;
+  margin: 20px auto;
+  border: 3px solid navy;
+  border-radius: 6px;
+  text-align: center;
+  box-sizing: border-box;
+}</style>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c31" onchange="atualizarProgresso()"><label for="c31">Sei o que são margin, padding, border</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c32" onchange="atualizarProgresso()"><label for="c32">Entendo box-sizing: border-box</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c33" onchange="atualizarProgresso()"><label for="c33">Sei centralizar com margin: 0 auto</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 4 — TIPOGRAFIA E CORES
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod4">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod4&#39;)">
+      <div class="icone">🎨</div>
+      <div>
+        <h2>Módulo 4 — Tipografia, Cores e Fundos</h2>
+        <span class="badge-modulo badge-basico">Básico</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <h3>Tipografia</h3>
+        <div class="code-block"><span class="c-sel">p</span> {
+  <span class="c-prop">font-family</span>: <span class="c-val">'Segoe UI'</span>, <span class="c-val">Arial</span>, <span class="c-val">sans-serif</span>; <span class="c-com">/* pilha de fontes */</span>
+  <span class="c-prop">font-size</span>:   <span class="c-num">16</span><span class="c-unit">px</span>;         <span class="c-com">/* ou rem (relativo ao root) */</span>
+  <span class="c-prop">font-weight</span>: <span class="c-num">400</span><span class="c-unit"></span>;         <span class="c-com">/* 100–900 | normal | bold */</span>
+  <span class="c-prop">font-style</span>:  <span class="c-val">italic</span>;
+  <span class="c-prop">line-height</span>: <span class="c-num">1.6</span>;           <span class="c-com">/* espaço entre linhas */</span>
+  <span class="c-prop">letter-spacing</span>: <span class="c-num">0.05</span><span class="c-unit">em</span>;    <span class="c-com">/* espaço entre letras */</span>
+  <span class="c-prop">text-align</span>:  <span class="c-val">center</span>;        <span class="c-com">/* left | right | justify */</span>
+  <span class="c-prop">text-transform</span>: <span class="c-val">uppercase</span>;  <span class="c-com">/* capitalize | lowercase */</span>
+  <span class="c-prop">text-decoration</span>: <span class="c-val">underline</span>; <span class="c-com">/* none | line-through */</span>
+}
+
+<span class="c-com">/* Google Fonts — adicione no &lt;head&gt;: */</span>
+<span class="c-com">/* &lt;link href="https://fonts.googleapis.com/css2?family=Inter&amp;display=swap" rel="stylesheet"&gt; */</span>
+<span class="c-sel">body</span> { <span class="c-prop">font-family</span>: <span class="c-val">'Inter'</span>, <span class="c-val">sans-serif</span>; }</div>
+
+        <h3>Cores</h3>
+        <div class="code-block"><span class="c-sel">.exemplo</span> {
+  <span class="c-com">/* 4 formas de definir cor: */</span>
+  <span class="c-prop">color</span>: <span class="c-val">red</span>;                     <span class="c-com">/* nome */</span>
+  <span class="c-prop">color</span>: <span class="c-val">#ff0000</span>;               <span class="c-com">/* hex */</span>
+  <span class="c-prop">color</span>: <span class="c-val">rgb(255, 0, 0)</span>;        <span class="c-com">/* rgb */</span>
+  <span class="c-prop">color</span>: <span class="c-val">hsl(0, 100%, 50%)</span>;     <span class="c-com">/* hsl — mais intuitivo! */</span>
+  <span class="c-prop">color</span>: <span class="c-val">rgba(255,0,0, 0.5)</span>;   <span class="c-com">/* com transparência */</span>
+
+  <span class="c-com">/* Gradientes no background! */</span>
+  <span class="c-prop">background</span>: <span class="c-val">linear-gradient(135deg, #667eea, #764ba2)</span>;
+  <span class="c-prop">background</span>: <span class="c-val">radial-gradient(circle, #ff6b6b, #feca57)</span>;
+}</div>
+
+        <h3>Fundos (background)</h3>
+        <div class="code-block"><span class="c-sel">.card</span> {
+  <span class="c-prop">background-color</span>:    <span class="c-val">#f0f0f0</span>;
+  <span class="c-prop">background-image</span>:    <span class="c-val">url('imagem.jpg')</span>;
+  <span class="c-prop">background-size</span>:     <span class="c-val">cover</span>;     <span class="c-com">/* cover | contain | 100px */</span>
+  <span class="c-prop">background-position</span>: <span class="c-val">center</span>;
+  <span class="c-prop">background-repeat</span>:   <span class="c-val">no-repeat</span>;
+}</div>
+      </div>
+
+      <!-- PLAYGROUND 3 -->
+      <div class="playground">
+        <div class="playground-header">
+          <span>🧪 Playground — Tipografia e Cores</span>
+          <button class="btn-aplicar" onclick="aplicarPlayground(&#39;pg3&#39;)">▶ Aplicar</button>
+        </div>
+        <div class="playground-body">
+          <textarea class="editor-css" id="pg3-css">.texto-demo {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: bold;
+  color: #2563eb;
+  background: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}</textarea>
+          <div class="preview-area" id="pg3-preview">
+            <div class="texto-demo" id="pg3-elem">Olá, CSS!</div>
+          </div>
+        </div>
+      </div>
+      <style id="pg3-style">.texto-demo {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: bold;
+  color: #2563eb;
+  background: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}</style>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c41" onchange="atualizarProgresso()"><label for="c41">Sei usar font-family, font-size, font-weight</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c42" onchange="atualizarProgresso()"><label for="c42">Conheço os formatos de cor: hex, rgb, hsl</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c43" onchange="atualizarProgresso()"><label for="c43">Sei criar gradientes com linear-gradient</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 5 — FLEXBOX
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod5">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod5&#39;)">
+      <div class="icone">↔️</div>
+      <div>
+        <h2>Módulo 5 — Flexbox: layouts em linha ou coluna</h2>
+        <span class="badge-modulo badge-medio">Intermediário</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <p>O <strong>Flexbox</strong> é o jeito moderno de alinhar e distribuir elementos em <strong>uma dimensão</strong> (linha ou coluna).</p>
+
+        <div class="flex-demo">
+          <div class="flex-item">Item 1</div>
+          <div class="flex-item">Item 2</div>
+          <div class="flex-item">Item 3</div>
+        </div>
+
+        <div class="code-block"><span class="c-com">/* No PAI (container): */</span>
+<span class="c-sel">.container</span> {
+  <span class="c-prop">display</span>:         <span class="c-val">flex</span>;
+  <span class="c-prop">flex-direction</span>:  <span class="c-val">row</span>;         <span class="c-com">/* row | column | row-reverse */</span>
+  <span class="c-prop">justify-content</span>: <span class="c-val">center</span>;      <span class="c-com">/* eixo PRINCIPAL: flex-start | flex-end | space-between | space-around */</span>
+  <span class="c-prop">align-items</span>:     <span class="c-val">center</span>;      <span class="c-com">/* eixo CRUZADO: flex-start | flex-end | stretch */</span>
+  <span class="c-prop">flex-wrap</span>:       <span class="c-val">wrap</span>;         <span class="c-com">/* quebra linha se não couber */</span>
+  <span class="c-prop">gap</span>:             <span class="c-num">16</span><span class="c-unit">px</span>;         <span class="c-com">/* espaço entre os filhos */</span>
+}
+
+<span class="c-com">/* Nos FILHOS (itens): */</span>
+<span class="c-sel">.item</span> {
+  <span class="c-prop">flex</span>:   <span class="c-num">1</span>;            <span class="c-com">/* cresce pra preencher o espaço */</span>
+  <span class="c-prop">order</span>:  <span class="c-num">2</span>;            <span class="c-com">/* reordena sem mexer no HTML */</span>
+  <span class="c-prop">align-self</span>: <span class="c-val">flex-end</span>; <span class="c-com">/* sobrescreve align-items para este item */</span>
+}</div>
+
+        <div class="dica">
+          <div class="dica-icon">💡</div>
+          <div>Para centralizar um elemento na tela: <code>display: flex; justify-content: center; align-items: center;</code> no pai — o truque mais usado do CSS!</div>
+        </div>
+      </div>
+
+      <!-- PLAYGROUND 4 -->
+      <div class="playground">
+        <div class="playground-header">
+          <span>🧪 Playground — Flexbox</span>
+          <button class="btn-aplicar" onclick="aplicarPlayground(&#39;pg4&#39;)">▶ Aplicar</button>
+        </div>
+        <div class="playground-body">
+          <textarea class="editor-css" id="pg4-css">.flex-pg {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: #1e293b;
+  padding: 16px;
+  border-radius: 10px;
+}
+.flex-pg div {
+  background: #7c3aed;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+}</textarea>
+          <div class="preview-area" id="pg4-preview">
+            <div class="flex-pg" id="pg4-elem">
+              <div>A</div><div>B</div><div>C</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style id="pg4-style">.flex-pg {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: #1e293b;
+  padding: 16px;
+  border-radius: 10px;
+}
+.flex-pg div {
+  background: #7c3aed;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+}</style>
+
+      <!-- QUIZ 2 -->
+      <div class="quiz">
+        <h3>🧩 Quiz — Flexbox</h3>
+        <div class="quiz-pergunta">
+          <p>Qual propriedade do Flexbox centraliza os itens no eixo principal (horizontal por padrão)?</p>
+          <div class="opcoes" id="q2">
+            <div class="opcao" onclick="responder(&#39;q2&#39;,this,false)">align-items</div>
+            <div class="opcao certa" onclick="responder(&#39;q2&#39;,this,true)">justify-content</div>
+            <div class="opcao" onclick="responder(&#39;q2&#39;,this,false)">flex-wrap</div>
+            <div class="opcao" onclick="responder(&#39;q2&#39;,this,false)">flex-direction</div>
+          </div>
+          <div class="feedback-quiz" id="fb-q2" style="color: rgb(74, 222, 128);">✅ Correto! Muito bem!</div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c51" onchange="atualizarProgresso()"><label for="c51">Sei ativar Flexbox com display: flex</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c52" onchange="atualizarProgresso()"><label for="c52">Sei usar justify-content e align-items</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c53" onchange="atualizarProgresso()"><label for="c53">Entendo a diferença de eixo principal vs cruzado</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 6 — GRID
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod6">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod6&#39;)">
+      <div class="icone">🔲</div>
+      <div>
+        <h2>Módulo 6 — CSS Grid: layouts em duas dimensões</h2>
+        <span class="badge-modulo badge-medio">Intermediário</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <p>O <strong>Grid</strong> é para layouts com <strong>linhas + colunas</strong> ao mesmo tempo — pense numa planilha.</p>
+
+        <div class="grid-demo">
+          <div class="grid-item">1</div>
+          <div class="grid-item">2</div>
+          <div class="grid-item">3</div>
+          <div class="grid-item">4</div>
+          <div class="grid-item">5</div>
+          <div class="grid-item">6</div>
+        </div>
+
+        <div class="code-block"><span class="c-sel">.grid</span> {
+  <span class="c-prop">display</span>: <span class="c-val">grid</span>;
+
+  <span class="c-com">/* Colunas: */</span>
+  <span class="c-prop">grid-template-columns</span>: <span class="c-num">200</span><span class="c-unit">px</span> <span class="c-num">200</span><span class="c-unit">px</span> <span class="c-num">200</span><span class="c-unit">px</span>;  <span class="c-com">/* 3 colunas fixas */</span>
+  <span class="c-prop">grid-template-columns</span>: <span class="c-val">repeat(3, 1fr)</span>;    <span class="c-com">/* 3 colunas iguais */</span>
+  <span class="c-prop">grid-template-columns</span>: <span class="c-val">repeat(auto-fit, minmax(200px, 1fr))</span>; <span class="c-com">/* MÁGICO! responsivo automático */</span>
+
+  <span class="c-com">/* Linhas: */</span>
+  <span class="c-prop">grid-template-rows</span>: <span class="c-val">auto</span> <span class="c-num">1</span><span class="c-unit">fr</span> <span class="c-val">auto</span>;
+
+  <span class="c-prop">gap</span>: <span class="c-num">16</span><span class="c-unit">px</span>;                    <span class="c-com">/* espaço entre células */</span>
+}
+
+<span class="c-com">/* Item ocupando múltiplas colunas/linhas: */</span>
+<span class="c-sel">.hero</span> {
+  <span class="c-prop">grid-column</span>: <span class="c-num">1</span> / <span class="c-num">3</span>;    <span class="c-com">/* da coluna 1 até a 3 */</span>
+  <span class="c-prop">grid-column</span>: <span class="c-val">span 2</span>;   <span class="c-com">/* ocupa 2 colunas */</span>
+  <span class="c-prop">grid-row</span>:    <span class="c-val">span 2</span>;   <span class="c-com">/* ocupa 2 linhas */</span>
+}
+
+<span class="c-com">/* Layout de página completo: */</span>
+<span class="c-sel">.pagina</span> {
+  <span class="c-prop">display</span>: <span class="c-val">grid</span>;
+  <span class="c-prop">grid-template-areas</span>:
+    <span class="c-str">"header  header"</span>
+    <span class="c-str">"sidebar main"</span>
+    <span class="c-str">"footer  footer"</span>;
+}
+<span class="c-sel">header</span>  { <span class="c-prop">grid-area</span>: <span class="c-val">header</span>;  }
+<span class="c-sel">aside</span>   { <span class="c-prop">grid-area</span>: <span class="c-val">sidebar</span>; }
+<span class="c-sel">main</span>    { <span class="c-prop">grid-area</span>: <span class="c-val">main</span>;    }
+<span class="c-sel">footer</span>  { <span class="c-prop">grid-area</span>: <span class="c-val">footer</span>;  }</div>
+      </div>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c61" onchange="atualizarProgresso()"><label for="c61">Sei usar grid-template-columns com repeat e fr</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c62" onchange="atualizarProgresso()"><label for="c62">Entendo grid-column: span X</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c63" onchange="atualizarProgresso()"><label for="c63">Sei usar grid-template-areas para layouts</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 7 — RESPONSIVO
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod7">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod7&#39;)">
+      <div class="icone">📱</div>
+      <div>
+        <h2>Módulo 7 — Design Responsivo e Media Queries</h2>
+        <span class="badge-modulo badge-medio">Intermediário</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <h3>O que é design responsivo?</h3>
+        <p>O site precisa funcionar bem em celular, tablet e desktop. A ferramenta principal são as <strong>Media Queries</strong>.</p>
+
+        <div class="code-block"><span class="c-com">/* Abordagem "Mobile First" — comece pelo celular, expanda */</span>
+
+<span class="c-com">/* Estilos base (celular): */</span>
+<span class="c-sel">.grid</span> {
+  <span class="c-prop">display</span>: <span class="c-val">grid</span>;
+  <span class="c-prop">grid-template-columns</span>: <span class="c-num">1</span><span class="c-unit">fr</span>;  <span class="c-com">/* 1 coluna no celular */</span>
+}
+
+<span class="c-com">/* Tablet (≥ 768px): */</span>
+<span class="c-kw">@media</span> (<span class="c-prop">min-width</span>: <span class="c-num">768</span><span class="c-unit">px</span>) {
+  <span class="c-sel">.grid</span> { <span class="c-prop">grid-template-columns</span>: <span class="c-val">repeat(2, 1fr)</span>; }
+}
+
+<span class="c-com">/* Desktop (≥ 1024px): */</span>
+<span class="c-kw">@media</span> (<span class="c-prop">min-width</span>: <span class="c-num">1024</span><span class="c-unit">px</span>) {
+  <span class="c-sel">.grid</span> { <span class="c-prop">grid-template-columns</span>: <span class="c-val">repeat(3, 1fr)</span>; }
+}
+
+<span class="c-com">/* Preferência por tema escuro do sistema: */</span>
+<span class="c-kw">@media</span> (<span class="c-prop">prefers-color-scheme</span>: <span class="c-val">dark</span>) {
+  <span class="c-sel">body</span> { <span class="c-prop">background</span>: <span class="c-val">#111</span>; <span class="c-prop">color</span>: <span class="c-val">#eee</span>; }
+}</div>
+
+        <h3>Unidades relativas</h3>
+        <div class="code-block"><span class="c-com">/* px  — absoluto, não escala */</span>
+<span class="c-com">/* %   — relativo ao pai */</span>
+<span class="c-com">/* em  — relativo ao font-size do elemento */</span>
+<span class="c-com">/* rem — relativo ao font-size do :root (mais previsível!) */</span>
+<span class="c-com">/* vw  — % da largura da viewport */</span>
+<span class="c-com">/* vh  — % da altura da viewport */</span>
+
+<span class="c-sel">html</span>  { <span class="c-prop">font-size</span>: <span class="c-num">16</span><span class="c-unit">px</span>; }  <span class="c-com">/* base */</span>
+<span class="c-sel">h1</span>    { <span class="c-prop">font-size</span>: <span class="c-num">2</span><span class="c-unit">rem</span>; }  <span class="c-com">/* = 32px */</span>
+<span class="c-sel">section</span> { <span class="c-prop">min-height</span>: <span class="c-num">100</span><span class="c-unit">vh</span>; } <span class="c-com">/* altura total da tela */</span></div>
+      </div>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c71" onchange="atualizarProgresso()"><label for="c71">Sei usar @media queries com min-width</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c72" onchange="atualizarProgresso()"><label for="c72">Entendo a abordagem Mobile First</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c73" onchange="atualizarProgresso()"><label for="c73">Sei a diferença entre px, %, rem, vw/vh</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 8 — ANIMAÇÕES
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod8">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod8&#39;)">
+      <div class="icone">✨</div>
+      <div>
+        <h2>Módulo 8 — Transições e Animações</h2>
+        <span class="badge-modulo badge-medio">Intermediário</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <h3>Transition — animação ao mudar estado</h3>
+        <div class="code-block"><span class="c-sel">.botao</span> {
+  <span class="c-prop">background</span>: <span class="c-val">royalblue</span>;
+  <span class="c-prop">transform</span>: <span class="c-val">scale(1)</span>;
+  <span class="c-prop">transition</span>: <span class="c-val">all 0.3s ease</span>;
+  <span class="c-com">/*          propriedade | duração | timing */</span>
+}
+<span class="c-sel">.botao:hover</span> {
+  <span class="c-prop">background</span>: <span class="c-val">darkblue</span>;
+  <span class="c-prop">transform</span>: <span class="c-val">scale(1.05)</span>;  <span class="c-com">/* cresce 5% */</span>
+  <span class="c-prop">box-shadow</span>: <span class="c-val">0 8px 20px rgba(0,0,0,.3)</span>;
+}</div>
+
+        <h3>Transform — transformações 2D/3D</h3>
+        <div class="code-block"><span class="c-sel">.elem</span> {
+  <span class="c-prop">transform</span>: <span class="c-val">translate(20px, 10px)</span>;  <span class="c-com">/* move */</span>
+  <span class="c-prop">transform</span>: <span class="c-val">rotate(45deg)</span>;        <span class="c-com">/* gira */</span>
+  <span class="c-prop">transform</span>: <span class="c-val">scale(1.5)</span>;           <span class="c-com">/* escala */</span>
+  <span class="c-prop">transform</span>: <span class="c-val">skew(10deg)</span>;          <span class="c-com">/* inclina */</span>
+  <span class="c-prop">transform</span>: <span class="c-val">translate(-50%, -50%)</span>; <span class="c-com">/* truque de centralização! */</span>
+}</div>
+
+        <h3>@keyframes — animação livre</h3>
+        <div class="code-block"><span class="c-kw">@keyframes</span> <span class="c-sel">pulsar</span> {
+  <span class="c-num">0%</span>   { <span class="c-prop">transform</span>: <span class="c-val">scale(1)</span>;    <span class="c-prop">opacity</span>: <span class="c-num">1</span>; }
+  <span class="c-num">50%</span>  { <span class="c-prop">transform</span>: <span class="c-val">scale(1.1)</span>;  <span class="c-prop">opacity</span>: <span class="c-num">.7</span>; }
+  <span class="c-num">100%</span> { <span class="c-prop">transform</span>: <span class="c-val">scale(1)</span>;    <span class="c-prop">opacity</span>: <span class="c-num">1</span>; }
+}
+
+<span class="c-sel">.pulsando</span> {
+  <span class="c-prop">animation</span>: <span class="c-val">pulsar 2s ease-in-out infinite</span>;
+  <span class="c-com">/*         nome | duração | timing | repetição */</span>
+}
+
+<span class="c-kw">@keyframes</span> <span class="c-sel">entrar</span> {
+  <span class="c-kw">from</span> { <span class="c-prop">opacity</span>: <span class="c-num">0</span>; <span class="c-prop">transform</span>: <span class="c-val">translateY(30px)</span>; }
+  <span class="c-kw">to</span>   { <span class="c-prop">opacity</span>: <span class="c-num">1</span>; <span class="c-prop">transform</span>: <span class="c-val">translateY(0)</span>; }
+}</div>
+
+        <!-- Botão animado de demo -->
+        <style>
+          .btn-demo {
+            display:inline-block; background:var(--roxo); color:#fff;
+            padding:14px 28px; border-radius:10px; font-weight:700;
+            cursor:pointer; transition:all .3s ease; margin:14px 0;
+          }
+          .btn-demo:hover {
+            background:#5b21b6; transform:scale(1.07);
+            box-shadow:0 8px 24px rgba(124,58,237,.5);
+          }
+          @keyframes pulse-anim {
+            0%,100% { transform:scale(1); }
+            50%      { transform:scale(1.08); }
+          }
+          .btn-pulsando { animation: pulse-anim 1.5s ease-in-out infinite; }
+        </style>
+        <p>Exemplo ao vivo — passe o mouse:</p>
+        <div class="btn-demo">Botão com hover</div>
+        &nbsp;
+        <div class="btn-demo btn-pulsando">Pulsando!</div>
+      </div>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c81" onchange="atualizarProgresso()"><label for="c81">Sei usar transition para animar mudanças de estado</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c82" onchange="atualizarProgresso()"><label for="c82">Sei usar transform: scale, rotate, translate</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c83" onchange="atualizarProgresso()"><label for="c83">Sei criar animações com @keyframes</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 9 — VARIÁVEIS CSS
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod9">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod9&#39;)">
+      <div class="icone">🔧</div>
+      <div>
+        <h2>Módulo 9 — Variáveis CSS e Organização</h2>
+        <span class="badge-modulo badge-avancado">Avançado</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <h3>Custom Properties (Variáveis CSS)</h3>
+        <p>Defina valores reutilizáveis e mantenha o código consistente:</p>
+        <div class="code-block"><span class="c-com">/* Declare no :root para serem globais */</span>
+<span class="c-sel">:root</span> {
+  <span class="c-prop">--cor-primaria</span>:   <span class="c-val">#7c3aed</span>;
+  <span class="c-prop">--cor-texto</span>:      <span class="c-val">#1e293b</span>;
+  <span class="c-prop">--fonte-base</span>:     <span class="c-val">16px</span>;
+  <span class="c-prop">--radius</span>:         <span class="c-val">12px</span>;
+  <span class="c-prop">--sombra</span>:         <span class="c-val">0 4px 16px rgba(0,0,0,0.1)</span>;
+}
+
+<span class="c-com">/* Use com var() */</span>
+<span class="c-sel">.botao</span> {
+  <span class="c-prop">background</span>:    <span class="c-val">var(--cor-primaria)</span>;
+  <span class="c-prop">border-radius</span>: <span class="c-val">var(--radius)</span>;
+  <span class="c-prop">box-shadow</span>:   <span class="c-val">var(--sombra)</span>;
+}
+
+<span class="c-com">/* Altere no JavaScript! */</span>
+document.documentElement.style
+  .setProperty(<span class="c-str">'--cor-primaria'</span>, <span class="c-str">'#e11d48'</span>);</div>
+
+        <h3>BEM — Convenção de nomenclatura de classes</h3>
+        <div class="code-block"><span class="c-com">/* BEM = Bloco__Elemento--Modificador */</span>
+
+<span class="c-sel">.card</span>              { } <span class="c-com">/* bloco */</span>
+<span class="c-sel">.card__titulo</span>      { } <span class="c-com">/* elemento do card */</span>
+<span class="c-sel">.card__imagem</span>      { } <span class="c-com">/* elemento do card */</span>
+<span class="c-sel">.card--destaque</span>    { } <span class="c-com">/* modificador: card em destaque */</span>
+<span class="c-sel">.card--desativado</span>  { } <span class="c-com">/* modificador: card inativo */</span></div>
+
+        <h3>Pseudo-elementos úteis</h3>
+        <div class="code-block"><span class="c-sel">.separador::before</span> {
+  <span class="c-prop">content</span>: <span class="c-str">""</span>;              <span class="c-com">/* obrigatório para exibir */</span>
+  <span class="c-prop">display</span>: <span class="c-val">block</span>;
+  <span class="c-prop">width</span>:   <span class="c-num">50</span><span class="c-unit">px</span>;
+  <span class="c-prop">height</span>:  <span class="c-num">3</span><span class="c-unit">px</span>;
+  <span class="c-prop">background</span>: <span class="c-val">var(--cor-primaria)</span>;
+  <span class="c-prop">margin</span>:  <span class="c-num">0</span> <span class="c-val">auto</span> <span class="c-num">16</span><span class="c-unit">px</span>;
+}</div>
+      </div>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c91" onchange="atualizarProgresso()"><label for="c91">Sei criar e usar variáveis CSS com :root e var()</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c92" onchange="atualizarProgresso()"><label for="c92">Entendo a convenção BEM para nomear classes</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c93" onchange="atualizarProgresso()"><label for="c93">Sei usar ::before e ::after</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MÓDULO 10 — FRAMEWORKS
+  ════════════════════════════════════════════ -->
+  <div class="modulo" id="mod10">
+    <div class="modulo-header aberto" onclick="toggleModulo(&#39;mod10&#39;)">
+      <div class="icone">🚀</div>
+      <div>
+        <h2>Módulo 10 — Frameworks CSS: Tailwind, Bootstrap e mais</h2>
+        <span class="badge-modulo badge-avancado">Avançado</span>
+      </div>
+      <div class="seta">▼</div>
+    </div>
+    <div class="modulo-corpo visivel">
+      <div class="teoria">
+        <h3>Por que usar um framework?</h3>
+        <p>Frameworks oferecem componentes e utilitários prontos, acelerando o desenvolvimento. Mas só fazem sentido depois que você <strong>já entende CSS</strong> — o que você está fazendo agora!</p>
+
+        <h3>🥇 Tailwind CSS — Utility First</h3>
+        <p>Você aplica classes de utilitário diretamente no HTML. Muito popular atualmente.</p>
+        <div class="code-block"><span class="c-com">&lt;!-- Instalar: npm install -D tailwindcss --&gt;</span>
+
+<span class="c-com">&lt;!-- Uso: classes utilitárias no HTML --&gt;</span>
+<span class="c-str">&lt;button</span> <span class="c-prop">class</span>=<span class="c-val">"bg-blue-600 text-white px-6 py-3 rounded-lg
+               hover:bg-blue-700 transition-all shadow-md"</span><span class="c-str">&gt;</span>
+  Clique aqui
+<span class="c-str">&lt;/button&gt;</span>
+
+<span class="c-com">&lt;!-- Grid responsivo --&gt;</span>
+<span class="c-str">&lt;div</span> <span class="c-prop">class</span>=<span class="c-val">"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"</span><span class="c-str">&gt;</span>
+  ...
+<span class="c-str">&lt;/div&gt;</span></div>
+
+        <h3>🥈 Bootstrap — Component First</h3>
+        <p>Componentes prontos (navbar, cards, modais...). Mais fácil de começar, menos flexível.</p>
+        <div class="code-block"><span class="c-com">&lt;!-- Via CDN no &lt;head&gt;: --&gt;</span>
+<span class="c-str">&lt;link</span> <span class="c-prop">rel</span>=<span class="c-val">"stylesheet"</span>
+      <span class="c-prop">href</span>=<span class="c-val">"https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css"</span><span class="c-str">&gt;</span>
+
+<span class="c-com">&lt;!-- Uso --&gt;</span>
+<span class="c-str">&lt;button</span> <span class="c-prop">class</span>=<span class="c-val">"btn btn-primary btn-lg"</span><span class="c-str">&gt;</span>Botão<span class="c-str">&lt;/button&gt;</span>
+<span class="c-str">&lt;div</span> <span class="c-prop">class</span>=<span class="c-val">"row"</span><span class="c-str">&gt;</span>
+  <span class="c-str">&lt;div</span> <span class="c-prop">class</span>=<span class="c-val">"col-md-4"</span><span class="c-str">&gt;</span>...<span class="c-str">&lt;/div&gt;</span>
+  <span class="c-str">&lt;div</span> <span class="c-prop">class</span>=<span class="c-val">"col-md-8"</span><span class="c-str">&gt;</span>...<span class="c-str">&lt;/div&gt;</span>
+<span class="c-str">&lt;/div&gt;</span></div>
+
+        <h3>Outros que vale conhecer</h3>
+        <ul>
+          <li><strong>Bulma</strong> — leve, baseado em Flexbox, sem JavaScript</li>
+          <li><strong>Sass/SCSS</strong> — CSS com variáveis, funções, aninhamento (compile para CSS)</li>
+          <li><strong>CSS Modules</strong> — escopa estilos por componente (usado com React/Vue)</li>
+          <li><strong>Styled Components</strong> — CSS dentro do JavaScript (React)</li>
+        </ul>
+
+        <div class="dica">
+          <div class="dica-icon">🗺️</div>
+          <div><strong>Minha sugestão de caminho:</strong> CSS Puro → Tailwind CSS → (depois) SCSS para projetos grandes.</div>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <h4>✅ Marque o que você já entendeu:</h4>
+        <div class="check-item marcado"><input type="checkbox" id="c101" onchange="atualizarProgresso()"><label for="c101">Entendo a diferença entre Tailwind e Bootstrap</label></div>
+        <div class="check-item marcado"><input type="checkbox" id="c102" onchange="atualizarProgresso()"><label for="c102">Sei quando usar um framework vs CSS puro</label></div>
+        <div class="check-item"><input type="checkbox" id="c103" onchange="atualizarProgresso()"><label for="c103">Conheço as opções: Sass, CSS Modules, Styled Components</label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       CONCLUSÃO
+  ════════════════════════════════════════════ -->
+  <div id="mapa" style="background:linear-gradient(135deg,#1a1a2e,#16213e); text-align:center; padding:40px 20px; margin-top:10px;">
+    <div style="font-size:3rem; margin-bottom:16px;">🏆</div>
+    <h2 style="font-size:1.6rem; margin-bottom:12px;">Próximos passos</h2>
+    <p style="opacity:.8; max-width:500px; margin:0 auto 20px;">Agora que você conhece a teoria, a melhor forma de fixar é <strong>construir projetos</strong>!</p>
+    <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center; max-width:600px; margin:auto;">
+      <div style="background:#ffffff15; border-radius:10px; padding:14px 20px; flex:1; min-width:140px;">
+        <div style="font-size:1.5rem;">1️⃣</div>
+        <div style="font-size:.85rem; margin-top:6px;">Clone um site simples (blog, portfólio)</div>
+      </div>
+      <div style="background:#ffffff15; border-radius:10px; padding:14px 20px; flex:1; min-width:140px;">
+        <div style="font-size:1.5rem;">2️⃣</div>
+        <div style="font-size:.85rem; margin-top:6px;">Faça desafios no Frontend Mentor</div>
+      </div>
+      <div style="background:#ffffff15; border-radius:10px; padding:14px 20px; flex:1; min-width:140px;">
+        <div style="font-size:1.5rem;">3️⃣</div>
+        <div style="font-size:.85rem; margin-top:6px;">Aprenda Tailwind CSS na prática</div>
+      </div>
+      <div style="background:#ffffff15; border-radius:10px; padding:14px 20px; flex:1; min-width:140px;">
+        <div style="font-size:1.5rem;">4️⃣</div>
+        <div style="font-size:.85rem; margin-top:6px;">Explore o DevTools do Chrome para inspecionar CSS</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer style="color: rgb(74, 222, 128); opacity: 1; font-size: 1rem;">🏆 Parabéns! Você concluiu 100% da aula! Agora vá construir projetos!</footer>
+
+<script>
+  // === TOGGLE MÓDULO ===
+  function toggleModulo(id) {
+    const modulo = document.getElementById(id);
+    const header = modulo.querySelector('.modulo-header');
+    const corpo  = modulo.querySelector('.modulo-corpo');
+    header.classList.toggle('aberto');
+    corpo.classList.toggle('visivel');
+  }
+
+  // === PLAYGROUNDS ===
+  const playgroundConfigs = {
+    pg1: { target: '#pg1-elem', styleId: 'pg1-style' },
+    pg2: { target: '#pg2-elem', styleId: 'pg2-style' },
+    pg3: { target: '#pg3-elem', styleId: 'pg3-style' },
+    pg4: { target: '#pg4-elem', styleId: 'pg4-style' },
+  };
+
+  function aplicarPlayground(pgId) {
+    const css   = document.getElementById(pgId + '-css').value;
+    const style = document.getElementById(pgId + '-style');
+    // Sanitiza: não permite @import ou url() com javascript
+    const seguro = css.replace(/@import/gi,'').replace(/javascript:/gi,'');
+    style.textContent = seguro;
+  }
+
+  // Aplica os playgrounds no carregamento
+  Object.keys(playgroundConfigs).forEach(pg => {
+    try { aplicarPlayground(pg); } catch(e) {}
+  });
+
+  // === QUIZ ===
+  const respondidas = {};
+  function responder(quizId, elem, certa) {
+    if (respondidas[quizId]) return;
+    respondidas[quizId] = true;
+    const fb = document.getElementById('fb-' + quizId);
+    if (certa) {
+      elem.classList.add('certa');
+      fb.style.color = '#4ade80';
+      fb.textContent = '✅ Correto! Muito bem!';
+    } else {
+      elem.classList.add('errada');
+      fb.style.color = '#f87171';
+      fb.textContent = '❌ Não era essa. Releia a seção acima!';
+      // Mostra a certa
+      const opcoes = document.querySelectorAll('#' + quizId + ' .opcao');
+      opcoes.forEach(o => {
+        if (o.getAttribute('onclick').includes('true')) o.classList.add('certa');
+      });
+    }
+  }
+
+  // === PROGRESSO ===
+  function atualizarProgresso() {
+    const todos    = document.querySelectorAll('.check-item input[type="checkbox"]');
+    const marcados = document.querySelectorAll('.check-item input[type="checkbox"]:checked');
+    const pct      = Math.round((marcados.length / todos.length) * 100);
+    document.getElementById('pct').textContent = pct;
+    document.getElementById('progresso-inner').style.width = pct + '%';
+
+    // Atualiza estilos dos itens
+    todos.forEach(cb => {
+      cb.closest('.check-item').classList.toggle('marcado', cb.checked);
+    });
+
+    // Mensagem de conclusão
+    if (pct === 100) {
+      const footer = document.querySelector('footer');
+      footer.textContent = '🏆 Parabéns! Você concluiu 100% da aula! Agora vá construir projetos!';
+      footer.style.color = '#4ade80';
+      footer.style.opacity = '1';
+      footer.style.fontSize = '1rem';
+    }
+  }
+</script>
+
+
+
+</body></html>
